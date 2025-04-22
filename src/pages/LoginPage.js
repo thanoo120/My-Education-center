@@ -16,16 +16,14 @@ const LoginPage = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const data = await res.json();
-
+  
       if (res.ok) {
-        // Save data to localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.role);
-        localStorage.setItem('name', data.name); // Save name for dashboard display
-
-        // Redirect based on role
+        localStorage.setItem('name', data.name);
+  
         if (data.role === 'student') {
           navigate('/student-dashboard');
         } else if (data.role === 'tutor') {
@@ -34,15 +32,18 @@ const LoginPage = () => {
           navigate('/parent-dashboard');
         }
       } else {
-        alert('Login failed: ' + data.message);
+        console.log("Full response: ", data);
+        alert('Login failed: ' + (data.message || 'Invalid credentials or server error'));
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('Login failed');
+      alert('Login failed: Something went wrong. Please try again.');
     }
   };
+  
 
   return (
+     
     <div className="login-container">
       <div className="login-box">
         <h2>Login</h2>

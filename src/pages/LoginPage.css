@@ -1,7 +1,8 @@
 /* src/pages/LoginPage.css */
 
 .login-container {
-  background: url('./pexels-tima-miroshnichenko-5303515.jpg') no-repeat center center fixed;
+  background: url("./pexels-tima-miroshnichenko-5303515.jpg") no-repeat center
+    center fixed;
   background-size: cover;
   min-height: 100vh;
   display: flex;
