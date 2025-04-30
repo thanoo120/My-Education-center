@@ -1,8 +1,7 @@
 /* src/pages/LoginPage.css */
 
 .login-container {
-  background: url("./pexels-tima-miroshnichenko-5303515.jpg") no-repeat center
-    center fixed;
+  background: url("./pexels-tima-miroshnichenko-5303515.jpg") no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
   display: flex;
@@ -23,7 +22,8 @@
   margin-bottom: 20px;
 }
 
-.login-box input {
+.login-box input,
+.login-box select {
   width: 100%;
   margin-bottom: 15px;
   padding: 10px;
@@ -35,12 +35,16 @@
 .login-box button {
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  background-color: #3498db;
   color: white;
   font-weight: bold;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.login-box button:hover {
+  background-color: #2980b9;
 }
 
 .login-box p {

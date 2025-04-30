@@ -1,14 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ClassScheduleCard from '../components/ClassScheduleCard';
+import StudentList from '../components/StudentList';
+import FeedbackForm from '../components/FeedbackForm';
 
-const TutorDashboard = () => {
-  const name = localStorage.getItem('name');
+function TutorDashboard() {
+  const [activeTab, setActiveTab] = useState('schedule');
 
   return (
-    <div style={{ padding: '40px', textAlign: 'center' }}>
-      <h1>Welcome, {name}! 👩‍🏫</h1>
-      <p>This is the tutor dashboard.</p>
+    <div className="tutor-dashboard">
+      <aside className="sidebar">
+        <h2>👨‍🏫 Tutor Panel</h2>
+        <ul>
+          <li onClick={() => setActiveTab('schedule')}>📅 Class Schedules</li>
+          <li onClick={() => setActiveTab('students')}>👩‍🎓 Students</li>
+          <li onClick={() => setActiveTab('feedback')}>💬 Send Feedback</li>
+        </ul>
+      </aside>
+
+      <main className="main-content">
+        {activeTab === 'schedule' && <ClassScheduleCard />}
+        {activeTab === 'students' && <StudentList />}
+        {activeTab === 'feedback' && <FeedbackForm />}
+      </main>
     </div>
   );
-};
+}
 
 export default TutorDashboard;

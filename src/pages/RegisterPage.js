@@ -31,6 +31,7 @@ const RegisterPage = () => {
           <option value="student">Student</option>
           <option value="tutor">Tutor</option>
           <option value="admin">Admin</option>
+          <option value="parent">Parent</option>
         </select>
         <button type="submit">Register</button>
         <p>Already registered? <a href="/">Login</a></p>
