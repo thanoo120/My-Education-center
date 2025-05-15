@@ -1,78 +1,85 @@
-import React, { useEffect, useState } from 'react';
-import '../pages/StudentDashboard.css';
+import React, { useState } from 'react';
+import {
+  FaChalkboardTeacher,
+  FaUsers,
+  FaChartLine,
+  FaComments,
+  FaClipboardList,
+  FaUserCheck,
+  FaSignOutAlt,
+  FaHome
+} from 'react-icons/fa';
 
-const StudentDashboard = () => {
-  const [profile, setProfile] = useState(null);
-  const [section, setSection] = useState('welcome');
-  const [subjects, setSubjects] = useState([]);
-  const [attendance, setAttendance] = useState([]);
-  const [grades, setGrades] = useState([]);
-  const [payments, setPayments] = useState([]);
+import ClassSchedule from '../components/ClassScheduleCard';
+import StudentList from '../components/StudentList';
+import StudentProgress from '../components/StudentProgress';
+import FeedbackCenter from '../components/FeedbackCenter';
+import ReportsOverview from '../components/ReportsOverview';
+import StudentPerformance from '../components/PerformanceInsights';
+import LogoutButton from '../components/LogoutButton';
 
-  const loginEmail = 'john@example.com';
-
-  useEffect(() => {
-    // Simulate fetching profile by email
-    setProfile({ name: 'John Doe', email: loginEmail, class: '10-A' });
-    setSubjects([
-      { subject_name: 'Mathematics' },
-      { subject_name: 'Biology' },
-      { subject_name: 'Physics' },
-      { subject_name: 'Chemistry' }
-    ]);
-  }, []);
+const TutorDashboard = () => {
+  const [section, setSection] = useState('dashboard');
 
   const renderSection = () => {
     switch (section) {
-      case 'subjects':
-        return (
-          <div className="subject-grid fade-in">
-            {subjects.map((subject, index) => (
-              <div key={index} className="subject-card">
-                <img
-                  src={`/images/${subject.subject_name.toLowerCase()}.png`}
-                  alt={subject.subject_name}
-                />
-                <h3>{subject.subject_name}</h3>
-              </div>
-            ))}
-          </div>
-        );
-      case 'profile':
-        return profile && (
-          <div className="card fade-in">
-            <h2>Profile</h2>
-            <p><strong>Name:</strong> {profile.name}</p>
-            <p><strong>Email:</strong> {profile.email}</p>
-            <p><strong>Class:</strong> {profile.class}</p>
-          </div>
-        );
+      case 'classSchedule':
+        return <ClassSchedule />;
+      case 'students':
+        return <StudentList />;
+      case 'progress':
+        return <StudentProgress />;
+      case 'feedback':
+        return <FeedbackCenter />;
+      case 'reports':
+        return <ReportsOverview />;
+      case 'performance':
+        return <StudentPerformance />;
+      case 'logout':
+        return <LogoutButton />;
       default:
         return (
-          <div className="welcome-card fade-in">
-            <h2>Welcome, {profile?.name || 'Student'}!</h2>
-            <p>Select a section from the menu to view details.</p>
+          <div className="bg-white p-5 rounded shadow-sm animate__animated animate__fadeIn">
+            <h2 className="mb-3 text-primary">Welcome, Tutor 👋</h2>
+            <p className="lead">Use the side menu to manage your classes and support your students.</p>
           </div>
         );
     }
   };
 
+  const navButtons = [
+    { label: 'Dashboard', icon: <FaHome />, key: 'dashboard' },
+    { label: 'Class Schedule', icon: <FaChalkboardTeacher />, key: 'classSchedule' },
+    { label: 'Enrolled Students', icon: <FaUsers />, key: 'students' },
+    { label: 'Student Progress', icon: <FaChartLine />, key: 'progress' },
+    { label: 'Feedback & Announcements', icon: <FaComments />, key: 'feedback' },
+    { label: 'Attendance & Reports', icon: <FaClipboardList />, key: 'reports' },
+    { label: 'Student Performance', icon: <FaUserCheck />, key: 'performance' },
+    { label: 'Logout', icon: <FaSignOutAlt />, key: 'logout' },
+  ];
+
   return (
-    <div className="dashboard">
-      <aside className="sidebar">
-        <div className="logo">Faithul Hikma</div>
-        <button onClick={() => setSection('welcome')}>Home</button>
-        <button onClick={() => setSection('subjects')}>My Classes</button>
-        <button>My Attendence</button>
-        <button>Exam Results</button>
-        <button onClick={() => setSection('profile')}>My Payments</button>
-        <button>Log out</button>
+    <div className="d-flex min-vh-100 bg-light">
+      {/* Sidebar */}
+      <aside className="bg-dark text-white p-4 shadow" style={{ width: '260px' }}>
+        <div className="h3 text-center mb-4 border-bottom pb-2">📚 Tutor Panel</div>
+        {navButtons.map(({ label, icon, key }) => (
+          <button
+            key={key}
+            onClick={() => setSection(key)}
+            className={`btn btn-outline-light d-flex align-items-center w-100 mb-2 ${section === key ? 'active bg-primary' : ''}`}
+            style={{ transition: 'all 0.2s ease' }}
+          >
+            <span className="me-2">{icon}</span>
+            {label}
+          </button>
+        ))}
       </aside>
-      <main className="content">
-        {renderSection()}
-      </main>
+
+      {/* Main Content */}
+      <main className="flex-fill p-4">{renderSection()}</main>
     </div>
   );
 };
 
-export default StudentDashboard;
+export default TutorDashboard;

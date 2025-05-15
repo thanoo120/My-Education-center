@@ -1,78 +1,107 @@
 import React, { useEffect, useState } from 'react';
-import '../pages/StudentDashboard.css';
+import StudentProgressReport from '../components/StudentProgress';
+import AttendanceStatus from '../components/AttendanceTracker';
+import ExamResults from '../components/PerformanceInsights';
+import FeedbackCenter from '../components/FeedbackCenter';
+import LogoutButton from '../components/LogoutButton';
 
-const StudentDashboard = () => {
-  const [profile, setProfile] = useState(null);
-  const [section, setSection] = useState('welcome');
-  const [subjects, setSubjects] = useState([]);
-  const [attendance, setAttendance] = useState([]);
-  const [grades, setGrades] = useState([]);
-  const [payments, setPayments] = useState([]);
+const ParentDashboard = () => {
+  const [section, setSection] = useState('home');
+  const [studentProfile, setStudentProfile] = useState(null);
 
-  const loginEmail = 'john@example.com';
+  const parentEmail = 'parent@example.com';
 
   useEffect(() => {
-    // Simulate fetching profile by email
-    setProfile({ name: 'John Doe', email: loginEmail, class: '10-A' });
-    setSubjects([
-      { subject_name: 'Mathematics' },
-      { subject_name: 'Biology' },
-      { subject_name: 'Physics' },
-      { subject_name: 'Chemistry' }
-    ]);
+    fetch('/api/parent/student-profile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: parentEmail }),
+    })
+      .then((res) => res.json())
+      .then((data) => setStudentProfile(data))
+      .catch((err) => console.error('Error:', err));
   }, []);
 
   const renderSection = () => {
     switch (section) {
-      case 'subjects':
-        return (
-          <div className="subject-grid fade-in">
-            {subjects.map((subject, index) => (
-              <div key={index} className="subject-card">
-                <img
-                  src={`/images/${subject.subject_name.toLowerCase()}.png`}
-                  alt={subject.subject_name}
-                />
-                <h3>{subject.subject_name}</h3>
-              </div>
-            ))}
-          </div>
-        );
-      case 'profile':
-        return profile && (
-          <div className="card fade-in">
-            <h2>Profile</h2>
-            <p><strong>Name:</strong> {profile.name}</p>
-            <p><strong>Email:</strong> {profile.email}</p>
-            <p><strong>Class:</strong> {profile.class}</p>
-          </div>
-        );
+      case 'progress':
+        return <StudentProgressReport />;
+      case 'attendance':
+        return <AttendanceStatus />;
+      case 'exam':
+        return <ExamResults />;
+      case 'feedback':
+        return <FeedbackCenter />;
+      case 'logout':
+        return <LogoutButton />;
       default:
         return (
-          <div className="welcome-card fade-in">
-            <h2>Welcome, {profile?.name || 'Student'}!</h2>
-            <p>Select a section from the menu to view details.</p>
+          <div className="bg-white p-4 rounded shadow-md animate-fade-in">
+            <h2 className="h4 mb-2">Welcome, Parent!</h2>
+            <p className="mb-0">
+              Monitor your child's progress, attendance, and academic performance.
+              
+            </p>
           </div>
         );
     }
   };
 
   return (
-    <div className="dashboard">
-      <aside className="sidebar">
-        <div className="logo">Faithul Hikma</div>
-        <button onClick={() => setSection('welcome')}>Home</button>
-        <button onClick={() => setSection('subjects')}>My Classes</button>
-        <button>My Attendence</button>
-        <button>Exam Results</button>
-        <button onClick={() => setSection('profile')}>My Payments</button>
-        <button>Log out</button>
+    <div className="d-flex min-vh-100 bg-light">
+      {/* Sidebar */}
+      <aside className="bg-secondary text-white p-4" style={{ width: '250px' }}>
+        <div className="h4 text-center mb-4">📘 Parent Portal</div>
+
+        <button
+          onClick={() => setSection('home')}
+          className="btn btn-outline-light d-block w-100 mb-2"
+        >
+          Home
+        </button>
+
+        <button
+          onClick={() => setSection('progress')}
+          className="btn btn-outline-light d-block w-100 mb-2"
+        >
+          Progress Report
+        </button>
+
+        <button
+          onClick={() => setSection('attendance')}
+          className="btn btn-outline-light d-block w-100 mb-2"
+        >
+          Attendance Overview
+        </button>
+
+        <button
+          onClick={() => setSection('exam')}
+          className="btn btn-outline-light d-block w-100 mb-2"
+        >
+          Exam Results
+        </button>
+
+        <button
+          onClick={() => setSection('feedback')}
+          className="btn btn-outline-light d-block w-100 mb-2"
+        >
+          Tutor Feedback
+        </button>
+
+        <button
+          onClick={() => setSection('logout')}
+          className="btn btn-outline-light d-block w-100"
+        >
+          Log out
+        </button>
       </aside>
-      <main className="content">
-        {renderSection()}
-      </main>
+
+      {/* Main content */}
+      <main className="flex-fill p-4">{renderSection()}</main>
     </div>
   );
 };
 
-export default StudentDashboard;
+export default ParentDashboard;
