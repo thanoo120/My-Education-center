@@ -7,9 +7,11 @@ const ClassSchedule = ({ email }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (!email) return; // Skip fetching if email is not available
+
     const fetchSchedule = async () => {
       try {
-        const res = await axios.get(`api/students/timetable?email=${email}`);
+        const res = await axios.get(`http://localhost:5000/api/students/timetable?email=${email}`);
         setSchedule(res.data.subjects);
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to load schedule');
@@ -21,6 +23,7 @@ const ClassSchedule = ({ email }) => {
     fetchSchedule();
   }, [email]);
 
+  if (!email) return <p className="text-red-500">Email is missing. Please log in.</p>;
   if (loading) return <p>Loading schedule...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 

@@ -15,11 +15,18 @@ import ExamResults from '../components/PerformanceInsights';
 import LogoutButton from '../components/LogoutButton';
 
 const StudentDashboard = () => {
+
   const [section, setSection] = useState('dashboard');
   const [profile, setProfile] = useState(null);
-  const loginEmail = 'john@example.com'; 
+  const loginEmail = localStorage.getItem('studentEmail');
+  
+ useEffect(() => {
+    if (!loginEmail) {
+      // Handle case where email isn't found (maybe redirect to login)
+      console.error('No email found - redirect to login');
+      return;
+    }
 
-  useEffect(() => {
     fetch('/api/students/profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -28,12 +35,12 @@ const StudentDashboard = () => {
       .then((res) => res.json())
       .then((data) => setProfile(data))
       .catch((err) => console.error('Profile fetch error:', err));
-  }, []);
+  }, [loginEmail]);
 
   const renderSection = () => {
     switch (section) {
       case 'classes':
-        return <ClassSchedule />;
+        return <ClassSchedule email={loginEmail} />;
       case 'attendance':
         return <AttendanceStatus />;
       case 'payments':

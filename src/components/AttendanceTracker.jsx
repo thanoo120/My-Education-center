@@ -17,9 +17,11 @@ const AttendanceStatus = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('/attendance/summary', {
+      const response = await axios.get('http://localhost:5000/api/attendance/summary', {
         params: { email },
+        
       });
+     
       setSummary(response.data);
     } catch (err) {
       console.error(err);

@@ -10,7 +10,7 @@ const StudentList = () => {
     const fetchStudents = async () => {
       try {
         setLoading(true);
-        const response = await API.get("/students/all");
+        const response = await API.get("http://localhost:5000/api/students/all");
         setStudents(response.data);
         setError(null);
       } catch (err) {

@@ -7,7 +7,7 @@ const PaymentRecords = () => {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/all-payments');
+        const response = await axios.get('http://localhost:5000/api/payment/all-payments');
         setPayments(response.data);
       } catch (error) {
         console.error('Error fetching payments:', error);

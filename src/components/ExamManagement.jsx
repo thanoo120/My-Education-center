@@ -5,7 +5,7 @@ const ExamManagement = () => {
   const [exams, setExams] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/exams')
+    axios.get('http://localhost:5000/api/exams/exams')
       .then(res => setExams(res.data))
       .catch(err => console.error(err));
   }, []);

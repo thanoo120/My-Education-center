@@ -19,7 +19,8 @@ const LoginPage = () => {
       });
 
       const data = await res.json();
-
+      localStorage.setItem('studentEmail', email); 
+      
       if (res.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.role);

@@ -20,7 +20,7 @@ const AttendanceOverview = () => {
     setError('');
 
     try {
-      const response = await axios.get('/attendance/student', {
+      const response = await axios.get('http://localhost:5000/api/attendance/student', {
         params: {
           email,
           from: fromDate,
@@ -29,6 +29,7 @@ const AttendanceOverview = () => {
       });
       setRecords(response.data.attendance);
     } catch (err) {
+      console.log(email, fromDate, toDate);
       console.error(err);
       setError('Failed to fetch attendance records.');
     } finally {
