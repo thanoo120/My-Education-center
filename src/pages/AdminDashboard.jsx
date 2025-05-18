@@ -41,7 +41,7 @@ const AdminDashboard = () => {
     { label: 'Manage Tutors', icon: <FaUserTie />, key: 'tutors' },
     { label: 'Payments', icon: <FaMoneyCheckAlt />, key: 'payments' },
     { label: 'Attendance', icon: <FaCalendarCheck />, key: 'attendance' },
-    { label: 'Exams & Results', icon: <FaFileAlt />, key: 'exams' },
+    { label: 'Exams', icon: <FaFileAlt />, key: 'exams' },
     { label: 'Logout', icon: <FaSignOutAlt />, key: 'logout' },
   ];
 

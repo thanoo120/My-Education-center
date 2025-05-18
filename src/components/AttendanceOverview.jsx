@@ -8,28 +8,32 @@ const AttendanceOverview = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleSubmit = async (e) => {
+  const [addStatus, setAddStatus] = useState('Present');
+  const [addRemarks, setAddRemarks] = useState('');
+
+  const handleFetch = async (e) => {
     e.preventDefault();
     if (!email || !fromDate || !toDate) {
-      setError('All fields are required.');
+      setError('All fields are required to fetch attendance.');
       return;
     }
 
     setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
       const response = await axios.get('http://localhost:5000/api/attendance/student', {
         params: {
-          email,
+          student_email:email,
           from: fromDate,
           to: toDate,
         },
       });
       setRecords(response.data.attendance);
     } catch (err) {
-      console.log(email, fromDate, toDate);
       console.error(err);
       setError('Failed to fetch attendance records.');
     } finally {
@@ -37,12 +41,42 @@ const AttendanceOverview = () => {
     }
   };
 
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    if (!email || !fromDate) {
+      setError('Email and Date are required to add attendance.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      await axios.post('http://localhost:5000/api/attendance/mark', {
+        student_email: email,
+        date: fromDate,
+        status: addStatus,
+        remarks: addRemarks,
+      });
+
+      setSuccess('Attendance added successfully.');
+      setAddRemarks('');
+      handleFetch(e); // Refresh records
+    } catch (err) {
+      console.error(err);
+      setError('Failed to add attendance record.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="bg-white p-6 rounded shadow-md max-w-3xl mx-auto mt-6">
+    <div className="bg-white p-6 rounded shadow-md max-w-4xl mx-auto mt-6">
       <h2 className="text-xl font-bold mb-4 text-center text-primary">📆 Attendance Overview</h2>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Fetch Attendance Form */}
+      <form onSubmit={handleFetch} className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <input
           type="email"
           placeholder="Student Email"
@@ -70,39 +104,81 @@ const AttendanceOverview = () => {
         </button>
       </form>
 
-      {/* Error Message */}
+      {/* Error & Success Messages */}
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+      {success && <p className="text-green-600 text-center mb-4">{success}</p>}
+      {loading && <p className="text-center text-gray-600">Loading...</p>}
 
-      {/* Loading */}
-      {loading && <p className="text-center">Loading attendance...</p>}
+      {/* Add Attendance Form */}
+      <div className="border-t pt-6 mt-6">
+        <h3 className="text-lg font-semibold mb-4 text-primary">➕ Add Attendance Record</h3>
+        <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="email"
+            placeholder="Student Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="form-control border p-2 rounded"
+          />
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+            className="form-control border p-2 rounded"
+          />
+          <select
+            value={addStatus}
+            onChange={(e) => setAddStatus(e.target.value)}
+            className="form-control border p-2 rounded"
+          >
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Remarks (optional)"
+            value={addRemarks}
+            onChange={(e) => setAddRemarks(e.target.value)}
+            className="form-control border p-2 rounded"
+          />
+          <button
+            type="submit"
+            className="md:col-span-2 bg-green-500 text-white p-2 rounded hover:bg-green-600"
+          >
+            Add Attendance
+          </button>
+        </form>
+      </div>
 
       {/* Attendance Table */}
       {!loading && records.length > 0 && (
-        <table className="table table-bordered table-hover w-full">
-          <thead className="table-info">
-            <tr>
-              <th>Date</th>
-              <th>Student Email</th>
-              <th>Status</th>
-              <th>Remarks</th>
-            </tr>
-          </thead>
-          <tbody>
-            {records.map((rec, idx) => (
-              <tr key={idx}>
-                <td>{rec.date}</td>
-                <td>{rec.student_email}</td>
-                <td>{rec.status}</td>
-                <td>{rec.remarks || '-'}</td>
+        <div className="overflow-x-auto mt-8">
+          <table className="table table-bordered table-hover w-full">
+            <thead className="table-info">
+              <tr>
+                <th>Date</th>
+                <th>Student Email</th>
+                <th>Status</th>
+                <th>Remarks</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {records.map((rec, idx) => (
+                <tr key={idx}>
+                  <td>{rec.date}</td>
+                  <td>{rec.student_email}</td>
+                  <td>{rec.status}</td>
+                  <td>{rec.remarks || '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {/* No Records */}
       {!loading && records.length === 0 && !error && (
-        <p className="text-center text-gray-500">No records found.</p>
+        <p className="text-center text-gray-500 mt-6">No records found.</p>
       )}
     </div>
   );

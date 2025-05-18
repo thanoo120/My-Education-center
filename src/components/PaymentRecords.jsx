@@ -34,7 +34,7 @@ const PaymentRecords = () => {
             payments.map((payment, index) => (
               <tr key={index}>
                 <td>{payment.payment_id}</td>
-                <td>{payment.student_name}</td>
+                <td>{payment.student_email}</td>
                 <td>${payment.amount}</td>
                 <td>{payment.status}</td>
               </tr>

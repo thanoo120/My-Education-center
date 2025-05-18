@@ -7,7 +7,7 @@ const StudentProgress = () => {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/students/performance');
+        const response = await axios.get('http://localhost:5000/api/exam-marks/');
         setStudents(response.data);
       } catch (error) {
         console.error('Error fetching student progress:', error);

@@ -7,7 +7,7 @@ const ReportsOverview = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/reports-overview');
+        const response = await axios.get('http://localhost:5000/api/students/reports');
         setReports(response.data);
       } catch (error) {
         console.error('Error fetching reports:', error);
