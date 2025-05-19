@@ -7,7 +7,7 @@ const StudentProgress = () => {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/exam-marks/');
+        const response = await axios.get('http://localhost:5000/api/exam-marks/view');
         setStudents(response.data);
       } catch (error) {
         console.error('Error fetching student progress:', error);
@@ -17,7 +17,6 @@ const StudentProgress = () => {
     fetchProgress();
   }, []);
 
-  // Helper to get badge class based on status
   const getBadgeClass = (status) => {
     switch (status) {
       case 'Improving':
@@ -39,9 +38,22 @@ const StudentProgress = () => {
       <div className="card-body">
         <ul className="list-group">
           {students.map((student, index) => (
-            <li key={index} className="list-group-item d-flex justify-content-between">
-              <span>{student.name}</span>
-              <span className={`badge ${getBadgeClass(student.status)}`}>{student.status}</span>
+            <li key={index} className="list-group-item">
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{student.name}</strong><br />
+                  <small>
+                    {student.marks && student.marks.length > 0 && (
+                      <>
+                        Last Exam: {student.marks[student.marks.length - 1].exam} - {student.marks[student.marks.length - 1].mark}%
+                      </>
+                    )}
+                  </small>
+                </div>
+                <span className={`badge ${getBadgeClass(student.status)} px-3 py-2`}>
+                  {student.status}
+                </span>
+              </div>
             </li>
           ))}
         </ul>

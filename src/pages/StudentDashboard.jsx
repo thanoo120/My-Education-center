@@ -13,7 +13,7 @@ import AttendanceStatus from '../components/AttendanceTracker';
 import FeeStatus from '../components/FeeStatus';
 import ExamResults from '../components/PerformanceInsights';
 import LogoutButton from '../components/LogoutButton';
-
+import studentImage from '../assests/student.jpg';
 const StudentDashboard = () => {
 
   const [section, setSection] = useState('dashboard');
@@ -44,22 +44,43 @@ const StudentDashboard = () => {
       case 'attendance':
         return <AttendanceStatus />;
       case 'payments':
-        return <FeeStatus />;
+        return <FeeStatus studentEmail={loginEmail}  />;
       case 'results':
         return <ExamResults />;
       case 'logout':
         return <LogoutButton />;
       default:
-        return (
-          <div className="bg-white p-5 rounded shadow-sm animate__animated animate__fadeIn">
-            <h2 className="mb-3 text-primary">
-              Welcome, {profile?.name } 👋
-            </h2>
-            <p className="lead">
-              Use the sidebar to access your class info, attendance, fee status, and results.
-            </p>
-          </div>
-        );
+  return (
+    <div className="bg-white p-5 rounded shadow-sm animate__animated animate__fadeIn">
+      <div className="d-flex flex-column flex-md-row align-items-center">
+        <img
+          src={studentImage}
+          alt="Welcome"
+          className="img-fluid mb-4 mb-md-0"
+          style={{ maxWidth: '450px', marginRight: '50px' }}
+        />
+        <div>
+          <h2 className="text-primary mb-3" style={{ fontSize: '2.2rem' }}>
+            Welcome, {profile?.name || 'Student'} 👋
+          </h2>
+          <p className="text-secondary mb-3" style={{ fontSize: '1.25rem' }}>
+            This is your personalized dashboard where you can:
+          </p>
+          <ul className="list-unstyled text-muted" style={{ fontSize: '1.1rem' }}>
+            <li>📚 <strong>View your class schedule</strong></li>
+            <li>📝 <strong>Track your attendance</strong></li>
+            <li>💰 <strong>Check your payment status</strong></li>
+            <li>📊 <strong>Review your exam results</strong></li>
+          </ul>
+          <p className="text-muted mt-4" style={{ fontSize: '1.1rem' }}>
+            Use the sidebar to navigate. We're glad to have you here!
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+
     }
   };
 

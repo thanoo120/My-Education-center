@@ -3,6 +3,9 @@ import axios from 'axios';
 
 const AttendanceOverview = () => {
   const [email, setEmail] = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [tutorId, setTutorId] = useState('');
+  const [courseId, setCourseId] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [records, setRecords] = useState([]);
@@ -27,7 +30,7 @@ const AttendanceOverview = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/attendance/student', {
         params: {
-          student_email:email,
+          student_email: email,
           from: fromDate,
           to: toDate,
         },
@@ -43,8 +46,8 @@ const AttendanceOverview = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    if (!email || !fromDate) {
-      setError('Email and Date are required to add attendance.');
+    if (!studentId || !email || !tutorId || !courseId || !fromDate) {
+      setError('All fields are required to add attendance.');
       return;
     }
 
@@ -54,7 +57,10 @@ const AttendanceOverview = () => {
 
     try {
       await axios.post('http://localhost:5000/api/attendance/mark', {
+        student_id: studentId,
         student_email: email,
+        tutor_id: tutorId,
+        course_id: courseId,
         date: fromDate,
         status: addStatus,
         remarks: addRemarks,
@@ -104,7 +110,6 @@ const AttendanceOverview = () => {
         </button>
       </form>
 
-      {/* Error & Success Messages */}
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
       {success && <p className="text-green-600 text-center mb-4">{success}</p>}
       {loading && <p className="text-center text-gray-600">Loading...</p>}
@@ -114,10 +119,31 @@ const AttendanceOverview = () => {
         <h3 className="text-lg font-semibold mb-4 text-primary">➕ Add Attendance Record</h3>
         <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
+            type="text"
+            placeholder="Student ID"
+            value={studentId}
+            onChange={(e) => setStudentId(e.target.value)}
+            className="form-control border p-2 rounded"
+          />
+          <input
             type="email"
             placeholder="Student Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="form-control border p-2 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Tutor ID"
+            value={tutorId}
+            onChange={(e) => setTutorId(e.target.value)}
+            className="form-control border p-2 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Course ID"
+            value={courseId}
+            onChange={(e) => setCourseId(e.target.value)}
             className="form-control border p-2 rounded"
           />
           <input
@@ -176,7 +202,6 @@ const AttendanceOverview = () => {
         </div>
       )}
 
-      {/* No Records */}
       {!loading && records.length === 0 && !error && (
         <p className="text-center text-gray-500 mt-6">No records found.</p>
       )}
