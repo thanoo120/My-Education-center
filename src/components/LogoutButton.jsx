@@ -3,9 +3,9 @@ import React from 'react';
 const LogoutButton = () => {
   const handleLogout = () => {
     // Logic to handle logout
-    localStorage.removeItem('authToken'); // Remove authentication token
+    localStorage.removeItem('authToken');
     console.log('User logged out');
-    window.location.href = '/'; // Redirect to login page
+    window.location.href = '/';
     
   };
 

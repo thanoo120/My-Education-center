@@ -60,7 +60,7 @@ const TutorDashboard = () => {
 
   return (
     <div className="d-flex min-vh-100 bg-light">
-      {/* Sidebar */}
+     
       <aside className="bg-dark text-white p-4 shadow" style={{ width: '260px' }}>
         <div className="h3 text-center mb-4 border-bottom pb-2">📚 Tutor Panel</div>
         {navButtons.map(({ label, icon, key }) => (
