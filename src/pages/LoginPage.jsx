@@ -5,15 +5,13 @@ import backgroundVedio from '../assests/back.mp4';
 import logo from '../assests/logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css/animate.min.css';
-// If you want to use social media icons (like Font Awesome),
-// ensure you have it installed or linked in your public/index.html:
-// <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showLoginForm, setShowLoginForm] = useState(false); // State to control form visibility
+  const [showLoginForm, setShowLoginForm] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -60,9 +58,9 @@ const LoginPage = () => {
   };
 
   return (
-    // Outer container: holds background video/overlay and the main scrollable content
+
     <div className="position-relative w-100 h-100 overflow-hidden">
-      {/* Background Video */}
+    
       <video 
         className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" 
         autoPlay 
@@ -75,15 +73,14 @@ const LoginPage = () => {
         Your browser does not support the video tag.
       </video>
       
-      {/* Overlay */}
+    
       <div
         className="position-absolute top-0 start-0 w-100 h-100"
         style={{ 
         }}
       />
 
-      {/* MAIN SCROLLABLE CONTENT AREA */}
-      {/* This div contains all the visible page content and handles scrolling */}
+
       <div 
         className="d-flex flex-column align-items-center w-100 min-vh-100 py-4" 
         style={{ 
@@ -91,26 +88,26 @@ const LoginPage = () => {
           overflowY: 'auto' 
         }}
       >
-        {/* Navbar */}
+      
         <nav 
           className="navbar navbar-expand-lg w-100 p-3" 
           style={{ 
-            position: 'sticky', // Makes it sticky at the top during scroll
+            position: 'sticky', 
             top: 0, 
-            zIndex: 11, // Higher z-index than logo's sticky background
-            backdropFilter: 'blur(5px)', // Subtle blur effect
+            zIndex: 11, 
+            backdropFilter: 'blur(5px)', 
             WebkitBackdropFilter: 'blur(5px)',
           }}
         >
           <div className="container-fluid">
-            {/* Logo in Navbar - Adjusted positioning from original */}
+           
             <a className="navbar-brand me-auto" href="#" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
               <img src={logo} alt="Logo" style={{ width: '120px', borderRadius: '50px', boxShadow: '0 0 10px rgba(255, 255, 255, 0.2)' }} />
             </a>
             
-            {/* Toggler for mobile */}
+          
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style={{ borderColor: 'rgba(255,255,255,0.5)' }}>
-              <span className="navbar-toggler-icon" style={{ filter: 'invert(1)' }}></span> {/* Invert for visibility on dark background */}
+              <span className="navbar-toggler-icon" style={{ filter: 'invert(1)' }}></span> 
             </button>
 
             
@@ -218,7 +215,7 @@ const LoginPage = () => {
           </div>
         )}
 
-        {/* Mission and Vision Sections (visible only when login form is NOT shown) */}
+        
         {!showLoginForm && (
           <div className="container text-white text-center mt-5 mb-5 px-3 animate__animated animate__fadeInUp">
             <div className="row justify-content-center mb-5">
@@ -260,7 +257,7 @@ const LoginPage = () => {
         <footer 
           className="w-100 py-4 text-center text-white mt-auto " 
           style={{ 
-            backgroundColor: 'rgba(0, 0, 0, 0.9)', // Slightly more opaque background
+            backgroundColor: 'rgba(0, 0, 0, 0.9)', 
             paddingLeft: '15px', 
             paddingRight: '15px', 
             borderTop: '1px solid rgba(255,255,255,0.1)',

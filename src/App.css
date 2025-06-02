@@ -75,3 +75,177 @@ body.dark {
   background-color: #121212;
   color: #fff;
 }
+
+
+/* Dashboard.css */
+
+/* General Page Background */
+body {
+  background-color: #f0f2f5; /* A soft, light gray background */
+}
+
+/* Main Container Styling */
+.dashboard-container {
+  max-width: 1400px; /* Wider container for more space */
+  margin: auto;
+}
+
+/* Page Title Styling */
+.dashboard-title {
+  font-family: 'Montserrat', sans-serif; /* Use a modern font */
+  font-weight: 800; /* Extra bold */
+  color: #34495e; /* Darker text for contrast */
+  letter-spacing: -1px;
+  line-height: 1.2;
+}
+
+.dashboard-title .text-highlight {
+  color: #8e44ad; /* A vibrant purple for emphasis */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Styling */
+.dashboard-card {
+  background: linear-gradient(145deg, #ffffff, #f0f0f0); /* Subtle gradient for depth */
+  border-radius: 20px; /* More rounded corners */
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Stronger, softer shadow */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  border: none; /* Remove default border */
+  position: relative; /* For pseudo-elements */
+  overflow: hidden; /* Hide overflowing gradients/effects */
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+/* Card Headers */
+.dashboard-card-header {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid; /* Thicker border for header */
+  position: relative;
+}
+
+.dashboard-card-header.text-primary { border-color: #6c5ce7; color: #6c5ce7 !important; } /* A softer purple-blue */
+.dashboard-card-header.text-info { border-color: #00b894; color: #00b894 !important; } /* A vibrant teal */
+.dashboard-card-header.text-success { border-color: #e17055; color: #e17055 !important; } /* A warm orange-red */
+
+/* Add a subtle underline animation/effect on header */
+.dashboard-card-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px; /* Position below the border */
+  width: 100%;
+  height: 3px;
+  background-color: currentColor; /* Matches text color */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-out;
+}
+
+.dashboard-card:hover .dashboard-card-header::after {
+  transform: scaleX(1);
+}
+
+
+/* Item Styling within Cards */
+.dashboard-card-item {
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Vertically center items */
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  background-color: #fdfdfd; /* Lighter background for items */
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); /* Softer shadow for items */
+  transition: all 0.2s ease-in-out;
+  border: 1px solid #eee; /* Light border */
+}
+
+.dashboard-card-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff; /* Brighter on hover */
+}
+
+.dashboard-card-item .icon-wrapper {
+  min-width: 45px; /* Fixed width for icons */
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 15px;
+  color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient backgrounds for icons */
+.icon-wrapper.bg-gradient-primary {
+  background: linear-gradient(45deg, #6c5ce7, #a29bfe); /* Purple gradient */
+}
+.icon-wrapper.bg-gradient-info {
+  background: linear-gradient(45deg, #00b894, #00d3a7); /* Teal gradient */
+}
+.icon-wrapper.bg-gradient-success {
+  background: linear-gradient(45deg, #e17055, #fab1a0); /* Orange-red gradient */
+}
+
+
+.dashboard-card-item .content-wrapper {
+  flex-grow: 1; /* Allows content to take remaining space */
+}
+
+.dashboard-card-item .item-title {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 5px;
+}
+
+.dashboard-card-item .item-detail,
+.dashboard-card-item .item-meta {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 3px;
+}
+
+.dashboard-card-item .item-detail i,
+.dashboard-card-item .item-meta i {
+  margin-right: 8px; /* Space between icon and text */
+  color: #7f8c8d; /* Subtle icon color */
+}
+
+.dashboard-card-item .item-meta.description {
+  font-style: italic;
+  color: #777;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-card {
+    padding: 25px;
+  }
+  .dashboard-card-header {
+    font-size: 1.6rem;
+  }
+  .dashboard-card-item {
+    padding: 12px 15px;
+    flex-direction: column; /* Stack content on small screens */
+    align-items: flex-start;
+  }
+  .dashboard-card-item .icon-wrapper {
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+  .dashboard-title {
+    font-size: 2rem;
+  }
+}
