@@ -13,8 +13,17 @@ const AttendanceOverview = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  /* ----------------- extra state for add-form ----------------- */
   const [addStatus, setAddStatus] = useState('Present');
   const [addRemarks, setAddRemarks] = useState('');
+
+  /* ----------------- helpers ----------------- */
+  const fetchRecords = async () => {
+    const res = await axios.get('http://localhost:5000/api/attendance/student', {
+      params: { student_email: email, from: fromDate, to: toDate },
+    });
+    setRecords(res.data.attendance);
+  };
 
   const handleFetch = async (e) => {
     e.preventDefault();
@@ -22,22 +31,10 @@ const AttendanceOverview = () => {
       setError('All fields are required to fetch attendance.');
       return;
     }
-
-    setLoading(true);
-    setError('');
-    setSuccess('');
-
     try {
-      const response = await axios.get('http://localhost:5000/api/attendance/student', {
-        params: {
-          student_email: email,
-          from: fromDate,
-          to: toDate,
-        },
-      });
-      setRecords(response.data.attendance);
-    } catch (err) {
-      console.error(err);
+      setLoading(true); setError(''); setSuccess('');
+      await fetchRecords();
+    } catch {
       setError('Failed to fetch attendance records.');
     } finally {
       setLoading(false);
@@ -50,12 +47,8 @@ const AttendanceOverview = () => {
       setError('All fields are required to add attendance.');
       return;
     }
-
-    setLoading(true);
-    setError('');
-    setSuccess('');
-
     try {
+      setLoading(true); setError(''); setSuccess('');
       await axios.post('http://localhost:5000/api/attendance/mark', {
         student_id: studentId,
         student_email: email,
@@ -65,145 +58,191 @@ const AttendanceOverview = () => {
         status: addStatus,
         remarks: addRemarks,
       });
-
       setSuccess('Attendance added successfully.');
       setAddRemarks('');
-      handleFetch(e); // Refresh records
-    } catch (err) {
-      console.error(err);
+      await fetchRecords();                // refresh the table
+    } catch {
       setError('Failed to add attendance record.');
     } finally {
       setLoading(false);
     }
   };
 
+  /* ----------------- UI ----------------- */
   return (
-    <div className="bg-white p-6 rounded shadow-md max-w-4xl mx-auto mt-6">
-      <h2 className="text-xl font-bold mb-4 text-center text-primary">📆 Attendance Overview</h2>
-
-      {/* Fetch Attendance Form */}
-      <form onSubmit={handleFetch} className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <input
-          type="email"
-          placeholder="Student Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="form-control border p-2 rounded"
-        />
-        <input
-          type="date"
-          value={fromDate}
-          onChange={(e) => setFromDate(e.target.value)}
-          className="form-control border p-2 rounded"
-        />
-        <input
-          type="date"
-          value={toDate}
-          onChange={(e) => setToDate(e.target.value)}
-          className="form-control border p-2 rounded"
-        />
-        <button
-          type="submit"
-          className="col-span-1 md:col-span-3 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
-          Get Attendance
-        </button>
-      </form>
-
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-      {success && <p className="text-green-600 text-center mb-4">{success}</p>}
-      {loading && <p className="text-center text-gray-600">Loading...</p>}
-
-      {/* Add Attendance Form */}
-      <div className="border-t pt-6 mt-6">
-        <h3 className="text-lg font-semibold mb-4 text-primary">➕ Add Attendance Record</h3>
-        <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            type="text"
-            placeholder="Student ID"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-            className="form-control border p-2 rounded"
-          />
-          <input
-            type="email"
-            placeholder="Student Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="form-control border p-2 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Tutor ID"
-            value={tutorId}
-            onChange={(e) => setTutorId(e.target.value)}
-            className="form-control border p-2 rounded"
-          />
-          <input
-            type="text"
-            placeholder="Course ID"
-            value={courseId}
-            onChange={(e) => setCourseId(e.target.value)}
-            className="form-control border p-2 rounded"
-          />
-          <input
-            type="date"
-            value={fromDate}
-            onChange={(e) => setFromDate(e.target.value)}
-            className="form-control border p-2 rounded"
-          />
-          <select
-            value={addStatus}
-            onChange={(e) => setAddStatus(e.target.value)}
-            className="form-control border p-2 rounded"
-          >
-            <option value="Present">Present</option>
-            <option value="Absent">Absent</option>
-          </select>
-          <input
-            type="text"
-            placeholder="Remarks (optional)"
-            value={addRemarks}
-            onChange={(e) => setAddRemarks(e.target.value)}
-            className="form-control border p-2 rounded"
-          />
-          <button
-            type="submit"
-            className="md:col-span-2 bg-green-500 text-white p-2 rounded hover:bg-green-600"
-          >
-            Add Attendance
-          </button>
-        </form>
+    <div className="container my-4">
+      <div className="text-center mb-4">
+        <h3 className="fw-bold text-primary">📆 Attendance Overview</h3>
+        <p className="text-muted mb-0">Manage and review student attendance records</p>
       </div>
 
-      {/* Attendance Table */}
-      {!loading && records.length > 0 && (
-        <div className="overflow-x-auto mt-8">
-          <table className="table table-bordered table-hover w-full">
-            <thead className="table-info">
-              <tr>
-                <th>Date</th>
-                <th>Student Email</th>
-                <th>Status</th>
-                <th>Remarks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((rec, idx) => (
-                <tr key={idx}>
-                  <td>{rec.date}</td>
-                  <td>{rec.student_email}</td>
-                  <td>{rec.status}</td>
-                  <td>{rec.remarks || '-'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* ───────────── Fetch Attendance Card ───────────── */}
+      <div className="card shadow-sm mb-4 border-start border-4 border-info">
+        <div className="card-body">
+          <h5 className="card-title text-info mb-3">🔍 Get Attendance</h5>
+          <form onSubmit={handleFetch} className="row g-2 align-items-end">
+            <div className="col-md-4">
+              <label className="form-label">Student Email</label>
+              <input
+                type="email"
+                className="form-control"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">From</label>
+              <input
+                type="date"
+                className="form-control"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+                required
+              />
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">To</label>
+              <input
+                type="date"
+                className="form-control"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+                required
+              />
+            </div>
+            <div className="col-md-2 d-grid">
+              <button className="btn btn-info">Fetch</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* alert messages */}
+      {error   && <div className="alert alert-danger">{error}</div>}
+      {success && <div className="alert alert-success">{success}</div>}
+      {loading && <p className="text-center text-muted">Loading...</p>}
+
+      {/* ───────────── Add Attendance Card ───────────── */}
+      <div className="card shadow-sm mb-4 border-start border-4 border-success">
+        <div className="card-body">
+          <h5 className="card-title text-success mb-3">➕ Add Attendance</h5>
+          <form onSubmit={handleAdd} className="row g-2 align-items-end">
+            <div className="col-md-3">
+              <label className="form-label">Student&nbsp;ID</label>
+              <input
+                type="text"
+                className="form-control"
+                value={studentId}
+                onChange={(e) => setStudentId(e.target.value)}
+                required
+              />
+            </div>
+            <div className="col-md-3">
+              <label className="form-label">Student&nbsp;Email</label>
+              <input
+                type="email"
+                className="form-control"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="col-md-2">
+              <label className="form-label">Tutor&nbsp;ID</label>
+              <input
+                type="text"
+                className="form-control"
+                value={tutorId}
+                onChange={(e) => setTutorId(e.target.value)}
+                required
+              />
+            </div>
+            <div className="col-md-2">
+              <label className="form-label">Course&nbsp;ID</label>
+              <input
+                type="text"
+                className="form-control"
+                value={courseId}
+                onChange={(e) => setCourseId(e.target.value)}
+                required
+              />
+            </div>
+            <div className="col-md-2">
+              <label className="form-label">Date</label>
+              <input
+                type="date"
+                className="form-control"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="col-md-2">
+              <label className="form-label">Status</label>
+              <select
+                className="form-select"
+                value={addStatus}
+                onChange={(e) => setAddStatus(e.target.value)}
+              >
+                <option value="Present">Present</option>
+                <option value="Absent">Absent</option>
+              </select>
+            </div>
+            <div className="col-md-4">
+              <label className="form-label">Remarks&nbsp;(optional)</label>
+              <input
+                type="text"
+                className="form-control"
+                value={addRemarks}
+                onChange={(e) => setAddRemarks(e.target.value)}
+              />
+            </div>
+            <div className="col-md-2 d-grid">
+              <button className="btn btn-success">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* ───────────── Table Card ───────────── */}
+      {records.length > 0 && !loading && (
+        <div className="card shadow-sm mb-5 border-start border-4 border-warning">
+          <div className="card-body">
+            <h5 className="card-title text-warning mb-3">📑 Attendance Records</h5>
+            <div className="table-responsive">
+              <table className="table table-bordered table-hover">
+                <thead className="table-dark">
+                  <tr>
+                    <th>Date</th>
+                    <th>Student Email</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {records.map((rec, idx) => (
+                    <tr key={idx}>
+                      <td>{rec.date}</td>
+                      <td>{rec.student_email}</td>
+                      <td>
+                        <span className={`badge ${rec.status === 'Present' ? 'bg-success' : 'bg-danger'}`}>
+                          {rec.status}
+                        </span>
+                      </td>
+                      <td>{rec.remarks || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       )}
 
       {!loading && records.length === 0 && !error && (
-        <p className="text-center text-gray-500 mt-6">No records found.</p>
+        <p className="text-center text-muted">No records found.</p>
       )}
     </div>
   );

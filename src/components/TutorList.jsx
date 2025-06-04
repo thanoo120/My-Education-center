@@ -25,7 +25,7 @@ const TutorList = () => {
           <tr>
             <th>ID</th>
             <th>Name</th>
-           
+           <th>Subject</th>
             <th>Email</th>
           </tr>
         </thead>
@@ -35,7 +35,7 @@ const TutorList = () => {
               <tr key={index}>
                 <td>{tutor.tutor_id}</td>
                 <td>{tutor.tutor_name}</td>
-                
+                <td>{tutor.subject_name}</td>
                 <td>{tutor.email}</td>
               </tr>
             ))

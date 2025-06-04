@@ -9,9 +9,11 @@ const PaymentRecords = () => {
       try {
         const response = await axios.get('http://localhost:5000/api/payment/all-payments');
         setPayments(response.data);
-      } catch (error) {
-        console.error('Error fetching payments:', error);
       }
+       catch (error) 
+       {
+        console.error('Error fetching payments:', error);
+       }
     };
 
     fetchPayments();
@@ -34,8 +36,8 @@ const PaymentRecords = () => {
             payments.map((payment, index) => (
               <tr key={index}>
                 <td>{payment.payment_id}</td>
-                <td>{payment.student_email}</td>
-                <td>${payment.amount}</td>
+                <td>{payment.name}</td>
+                <td>LKR {payment.amount}</td>
                 <td>{payment.status}</td>
               </tr>
             ))
