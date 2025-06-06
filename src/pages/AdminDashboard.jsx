@@ -11,7 +11,7 @@ import PaymentRecords from '../components/PaymentRecords';
 import AttendanceOverview from '../components/AttendanceOverview';
 import ExamManagement from '../components/ExamManagement';
 import LogoutButton from '../components/LogoutButton';
-
+import SummaryCard from '../components/SummaryCard'
 const AdminDashboard = () => {
   const [section, setSection] = useState('dashboard');
 
@@ -24,91 +24,14 @@ const AdminDashboard = () => {
       case 'exams': return <ExamManagement />;
       case 'logout': return <LogoutButton />;
       default:
-       return (
-    <div className="container-fluid py-4">
-      {/* PROFILE HEADER */}
-      <div className="d-flex align-items-center mb-4">
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-          alt="Admin avatar"
-          className="rounded-circle me-3"
-          width="60"
-        />
-        <div>
-          <h4 className="mb-0 fw-bold">Welcome back, Admin!</h4>
-          <span className="text-muted small">Have a productive day 👋</span>
-        </div>
-      </div>
-
-      {/* SUMMARY CARDS */}
-      <div className="row mb-4">
-        <SummaryCard title="Students"   value={counts.students} icon="🎓" color="#0d6efd" />
-        <SummaryCard title="Tutors"     value={counts.tutors}   icon="🧑‍🏫" color="#20c997" />
-        <SummaryCard title="Parents"    value={counts.parents}  icon="👨‍👩‍👧‍👦" color="#fd7e14" />
-        <SummaryCard title="New Msgs"   value={messages.length} icon="✉️" color="#dc3545" />
-      </div>
-
-      {/* CHARTS ROW */}
-      <div className="row">
-        {/* EXAM ANALYSIS */}
-        <div className="col-lg-6 mb-4">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h6 className="card-title mb-3">Exam Performance (avg %)</h6>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={examData}>
-                  <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2}/>
-                  <XAxis dataKey="subject"/>
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="average" stackId="a" fill="#0d6efd"/>
-                  <Bar dataKey="highest" stackId="a" fill="#20c997"/>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+        return (
+          <div className="bg-white p-5 rounded shadow animate__animated animate__fadeIn">
+            <h2 className="mb-3 text-primary fw-bold">Welcome, Admin 👋</h2>
+            <p className="lead text-muted">Use the menu on the left to manage the platform efficiently.</p>
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin" style={{ width: '150px' }} />
+            <SummaryCard/>
           </div>
-        </div>
-
-        {/* PAYMENT ANALYSIS */}
-        <div className="col-lg-6 mb-4">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h6 className="card-title mb-3">Payments Last 12 Months ($)</h6>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={paymentData}>
-                  <XAxis dataKey="month"/>
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="amount" stroke="#fd7e14" strokeWidth={2}/>
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* MESSAGES PANEL */}
-      <div className="card shadow-sm">
-        <div className="card-body">
-          <h6 className="card-title mb-3">Incoming Messages</h6>
-
-          {messages.length === 0 && (
-            <p className="text-muted">No new messages 🎉</p>
-          )}
-
-          {messages.length > 0 && (
-            <ul className="list-group">
-              {messages.map(m => (
-                <MessageItem key={m.id} item={m} onReplied={refreshMessages}/>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+        );
     }
   };
 

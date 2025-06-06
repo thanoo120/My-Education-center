@@ -1,7 +1,6 @@
-// src/components/AttendanceStatus.js
+
 import React, { useState } from "react";
 import axios from "axios";
-import 'animate.css'; // Good practice to include, though might be global now
 
 const AttendanceStatus = () => {
   const [email, setEmail] = useState("");
@@ -9,8 +8,6 @@ const AttendanceStatus = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // --- Mock Data for Demonstration ---
-  // In a real application, this data would come from your backend API.
   const mockAttendanceData = {
     "student1@example.com": {
       totalClasses: 50,
@@ -37,8 +34,8 @@ const AttendanceStatus = () => {
 
   const handleFetchSummary = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
-    setSummary(null); // Clear previous summary
+    setError("");
+    setSummary(null); 
 
     if (!email) {
       setError("Please enter a student email to check attendance.");
@@ -48,22 +45,22 @@ const AttendanceStatus = () => {
     setLoading(true);
 
     try {
-      // Simulate API call delay for better UX
-      await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2 second delay
 
-      // --- REPLACE THIS MOCK LOGIC WITH YOUR ACTUAL AXIOS API CALL ---
-      // const response = await axios.get(
-      //   "http://localhost:5000/api/attendance/summary",
-      //   { params: { email } }
-      // );
-      // setSummary(response.data);
-      // --- END OF ACTUAL API CALL REPLACEMENT ---
+      await new Promise(resolve => setTimeout(resolve, 1200)); 
 
-      // Using mock data for client-side demo
+      
+      const response = await axios.get(
+        "http://localhost:5000/api/attendance/summary",
+        { params: { email } }
+      );
+      setSummary(response.data);
+   
+
+     
       if (mockAttendanceData[email]) {
         setSummary(mockAttendanceData[email]);
       } else {
-        // If email not found in mock data
+       
         setError("Attendance data not found for this email. Try 'student1@example.com' or 'student2@example.com'.");
       }
 
@@ -120,7 +117,7 @@ const AttendanceStatus = () => {
           If not using a local image, you can use a placeholder or remove this.
         */}
         <img
-          src="/assets/attendance_illustration.svg" // Adjust this path if your image is elsewhere
+          src="../assests/attendence.jpg" // Adjust this path if your image is elsewhere
           alt="Student checking attendance illustration"
           className="img-fluid rounded mb-5 shadow-sm mx-auto d-block custom-image-sizing"
           onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/400x200?text=Attendance+Tracking"; }}
