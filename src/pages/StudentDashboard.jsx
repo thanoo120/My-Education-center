@@ -24,21 +24,28 @@ const StudentDashboard = () => {
   const [profile, setProfile] = useState(null);
   const loginEmail = localStorage.getItem("studentEmail");
 
-  useEffect(() => {
-    if (!loginEmail) {
-      console.error("No email found - redirect to login");
-      return;
-    }
+ useEffect(() => {
+  if (!loginEmail) {
+    console.error("No email found - redirect to login");
+    return;
+  }
 
-    fetch("/api/students/profile", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: loginEmail }),
+  fetch("http://localhost:5000/api/students/profile", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: loginEmail }),
+  })
+    .then(async (res) => {
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Failed to fetch profile");
+      }
+      return res.json();
     })
-      .then((res) => res.json())
-      .then((data) => setProfile(data))
-      .catch((err) => console.error("Profile fetch error:", err));
-  }, [loginEmail]);
+    .then((data) => setProfile(data))
+    .catch((err) => console.error("Profile fetch error:", err.message));
+}, [loginEmail]);
+
 
   const renderSection = () => {
     switch (section) {

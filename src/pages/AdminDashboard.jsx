@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FaUsers, FaUserTie, FaMoneyCheckAlt, FaCalendarCheck,
   FaFileAlt, FaSignOutAlt, FaHome
 } from 'react-icons/fa';
 import 'animate.css';
+import axios from 'axios';
 
 import StudentList from '../components/StudentList';
 import TutorList from '../components/TutorList';
@@ -14,7 +15,13 @@ import LogoutButton from '../components/LogoutButton';
 import SummaryCard from '../components/SummaryCard'
 const AdminDashboard = () => {
   const [section, setSection] = useState('dashboard');
+  const [summary ,setSummary]=useState({ students: 0, tutors: 0, payments: 0 });
 
+  useEffect(()=>{
+    axios.get('http://localhost:5000/api/dashboard/summary')
+    .then(res=>{setSummary(res.data)})
+    .catch(err=>{console.error(err)})
+  },[]);
   const renderSection = () => {
     switch (section) {
       case 'students': return <StudentList />;
@@ -25,12 +32,35 @@ const AdminDashboard = () => {
       case 'logout': return <LogoutButton />;
       default:
         return (
-          <div className="bg-white p-5 rounded shadow animate__animated animate__fadeIn">
-            <h2 className="mb-3 text-primary fw-bold">Welcome, Admin 👋</h2>
-            <p className="lead text-muted">Use the menu on the left to manage the platform efficiently.</p>
-            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin" style={{ width: '150px' }} />
-            <SummaryCard/>
+    <div className="container mt-5">
+      <h3 className="text-center mb-4">Dashboard Summary</h3>
+      <div className="row text-white">
+        <div className="col-md-4">
+          <div className="card bg-primary shadow text-center">
+            <div className="card-body">
+              <h5 className="card-title">Students</h5>
+              <p className="display-4">{summary.students}</p>
+            </div>
           </div>
+        </div>
+        <div className="col-md-4">
+          <div className="card bg-success shadow text-center">
+            <div className="card-body">
+              <h5 className="card-title">Tutors</h5>
+              <p className="display-4">{summary.tutors}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="card bg-warning shadow text-center">
+            <div className="card-body">
+              <h5 className="card-title">Total Payments</h5>
+              <p className="display-4">${summary.payments}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
         );
     }
   };

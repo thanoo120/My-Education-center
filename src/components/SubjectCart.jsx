@@ -18,12 +18,23 @@ const SubjectCart = () => {
       .catch((err) => console.error('Error fetching subjects:', err));
   }, []);
 
-  const handleViewTutor = (tutorId) => {
-    fetch(`http://localhost:5000/api/tutors/information/${tutorId}`)
-      .then((res) => res.json())
-      .then((data) => setTutorInfo(data))
-      .catch((err) => console.error('Error fetching tutor info:', err));
-  };
+ const handleViewTutor = (tutorId) => {
+  fetch(`http://localhost:5000/api/tutors/information/${tutorId}`)
+    .then((res) => res.json())
+    .then((data) => {
+      if (data && data.length > 0) {
+        setTutorInfo(data[0]);
+      } else {
+        setTutorInfo(null);
+        showToastMessage('⚠️ No tutor information found.');
+      }
+    })
+    .catch((err) => {
+      console.error('Error fetching tutor info:', err);
+      showToastMessage('❌ Failed to load tutor info.');
+    });
+};
+
 
   const handleEnroll = async (subjectId) => {
     try {
@@ -93,16 +104,13 @@ const SubjectCart = () => {
             <div className="modal-content border-info">
               <div className="modal-header bg-info text-white">
                 <h5 className="modal-title">👨‍🏫 Tutor Details</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setTutorInfo(null)}
-                ></button>
+               
               </div>
               <div className="modal-body">
-                <p><strong>Name:</strong> {tutorInfo.name}</p>
-                <p><strong>Email:</strong> {tutorInfo.email}</p>
-                <p><strong>Expertise:</strong> {tutorInfo.expertise || 'N/A'}</p>
+                <p><strong>Name:</strong> {tutorInfo.tutor_name}</p>
+                <p><strong>Subject:</strong> {tutorInfo.subject_name}</p>
+                <p><strong>Experience:</strong> {tutorInfo.experience } years</p>
+                <p><strong>Description:</strong>{tutorInfo.description}</p>
               </div>
               <div className="modal-footer">
                 <button
