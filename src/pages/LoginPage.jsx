@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import backgroundVedio from '../assests/back.mp4';
-import logo from '../assests/logo.png';
-import missionImg from '../assests/crdit.jpg'; // Placeholder for Mission image
-import visionImg from '../assests/crdit.jpg';   // Placeholder for Vision image
-import feedbackImg from '../assests/crdit.jpg'; // Placeholder for Feedback image
+import logo from '../assests/Classlogo.jpg';
+import missionImg from '../assests/crdit.jpg'; 
+import visionImg from '../assests/crdit.jpg';   
+import feedbackImg from '../assests/crdit.jpg'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css/animate.min.css';
-import '@fortawesome/fontawesome-free/css/all.min.css'; // <--- UNCOMMENTED THIS LINE
+import '@fortawesome/fontawesome-free/css/all.min.css'; 
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [feedback, setFeedback] = useState('');
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -61,14 +70,14 @@ const LoginPage = () => {
 
   const handleFeedbackSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the feedback to a backend server
+
     console.log('Feedback submitted:', feedback);
     alert('Thank you for your feedback!');
     setFeedback('');
   };
 
   return (
-    // The main container now ensures it fills the viewport and allows overall scrolling
+  
     <div className="position-relative w-100 min-vh-100 overflow-hidden" style={{ minHeight: '100vh' }}>
       <video
         className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
@@ -90,65 +99,76 @@ const LoginPage = () => {
         }}
       />
 
-      {/* Main content wrapper - removed overflowY: 'auto' here */}
       <div
         className="d-flex flex-column align-items-center w-100"
         style={{
           zIndex: 2,
           position: 'relative',
-          // The content should naturally expand and trigger scroll on body/html
-          paddingTop: '0', // Adjust if needed
-          paddingBottom: '0' // Adjust if needed
+          
+          paddingTop: '0', 
+          paddingBottom: '0' 
         }}
       >
-        <nav
-          className="navbar navbar-expand-lg w-100 p-3"
-          style={{
-            position: 'sticky', // This is correct for sticky behavior
-            top: 0,
-            zIndex: 11,
-            backdropFilter: 'blur(5px)',
-            WebkitBackdropFilter: 'blur(5px)',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}
-        >
+         <nav className={`navbar navbar-expand-lg w-100 p-3 fixed-top ${scrolled ? 'navbar-scrolled' : ''}`} 
+             style={{ 
+               transition: 'all 0.3s ease',
+               backdropFilter: scrolled ? 'blur(10px)' : 'blur(5px)',
+               backgroundColor: scrolled ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.5)',
+               boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.3)' : 'none',
+               zIndex: 1000
+             }}>
           <div className="container-fluid">
-            <a className="navbar-brand me-auto" href="#" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
-              <img src={logo} alt="Logo" style={{ width: '120px', borderRadius: '50px', boxShadow: '0 0 10px rgba(255, 255, 255, 0.2)' }} />
+            <a className="navbar-brand" href="#" onClick={e => {e.preventDefault(); navigate('/');}}>
+              <img src={logo} alt="Logo" style={{ 
+                width: scrolled ? '80px' : '120px', 
+                borderRadius: '50%', 
+                transition: 'all 0.3s ease',
+                boxShadow: '0 0 15px rgba(255,215,0,0.3)'
+              }} />
             </a>
-
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style={{ borderColor: 'rgba(255,255,255,0.5)' }}>
+            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
               <span className="navbar-toggler-icon" style={{ filter: 'invert(1)' }}></span>
             </button>
-
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav ms-auto">
-                <li className="nav-item me-3">
-                  <a className="nav-link text-white fw-bold" href="#home" onClick={(e) => { e.preventDefault(); document.getElementById('home').scrollIntoView({ behavior: 'smooth' }); }}>Home</a>
-                </li>
-                <li className="nav-item me-3">
-                  <a className="nav-link text-white fw-bold" href="#about" onClick={(e) => { e.preventDefault(); document.getElementById('about').scrollIntoView({ behavior: 'smooth' }); }}>About</a>
-                </li>
-                <li className="nav-item me-3">
-                  <a className="nav-link text-white fw-bold" href="#feedback" onClick={(e) => { e.preventDefault(); document.getElementById('feedback').scrollIntoView({ behavior: 'smooth' }); }}>Feedback</a>
-                </li>
-                <li className="nav-item me-3"> {/* Added feedback link */}
-                  <a className="nav-link text-white fw-bold" href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Contact Us</a>
-                </li>
+                {['home','about','feedback','contact'].map(sec => (
+                  <li className="nav-item me-3" key={sec}>
+                    <a className={`nav-link fw-bold ${scrolled ? 'text-white' : 'text-white'}`} 
+                       href={`#${sec}`} 
+                       onClick={e => {
+                         e.preventDefault(); 
+                         document.getElementById(sec).scrollIntoView({ behavior: 'smooth' });
+                       }}
+                       style={{
+                         fontSize: scrolled ? '0.95rem' : '1rem',
+                         transition: 'all 0.3s ease',
+                         position: 'relative',
+                         padding: '0.5rem 0'
+                       }}>
+                      {sec.charAt(0).toUpperCase()+sec.slice(1)}
+                      <span className="nav-link-underline" style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        width: '0%',
+                        height: '2px',
+                        backgroundColor: '#FFD700',
+                        transition: 'width 0.3s ease'
+                      }}></span>
+                    </a>
+                  </li>
+                ))}
                 <li className="nav-item">
-                  <button
-                    onClick={() => setShowLoginForm(true)}
-                    className="btn btn-warning btn-sm px-4 py-2 fw-bold"
-                    style={{
-                      borderRadius: '25px',
-                      backgroundColor: '#FFD700',
-                      borderColor: '#FFD700',
-                      color: '#343a40',
-                      transition: 'all 0.3s ease-in-out',
-                      '--bs-btn-hover-bg': '#e6c200',
-                      '--bs-btn-hover-border-color': '#e6c200'
-                    }}
-                  >
+                  <button onClick={() => setShowLoginForm(true)} 
+                          className="btn btn-sm px-4 py-2 fw-bold" 
+                          style={{ 
+                            borderRadius: '25px', 
+                            background: 'linear-gradient(45deg, #FFD700, #FFA500)',
+                            color: '#343a40',
+                            transition: 'all 0.3s ease',
+                            transform: scrolled ? 'scale(0.9)' : 'scale(1)',
+                            boxShadow: '0 4px 15px rgba(242, 157, 11, 0.4)'
+                          }}>
                     Login
                   </button>
                 </li>
@@ -157,17 +177,17 @@ const LoginPage = () => {
           </div>
         </nav>
 
-        {/* Home Section */}
+       
         <section id="home" className="text-center text-white px-3 animate__animated animate__fadeInDown mt-5 mb-4 py-5" style={{ maxWidth: '800px', flexShrink: 0 }}>
-          <h2 className="fw-bold display-5 mb-2" style={{ letterSpacing: '1px', textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>
-            Welcome to <span style={{ color: '#FFD700' }}>Baithulhikma Institute</span>
+          <h2 className="fw-bold display-5 mb-2" style={{ letterSpacing: '1px', textShadow: '2px 2px 4px rgba(0,0,0,0.7)' ,paddingTop:'100px'}}>
+            Welcome to <span style={{ color: '#FFD700' }}>Esay Learn Institute</span>
           </h2>
           <p className="fst-italic lead" style={{ maxWidth: '650px', margin: '0 auto', fontSize: '1.2rem', textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>
             “Education is the passport to the future, for tomorrow belongs to those who prepare for it today.”
           </p>
         </section>
 
-        {/* Login/Get Started Section */}
+     
         {!showLoginForm ? (
           <div className="text-center animate__animated animate__zoomIn my-5 py-5" style={{ flexShrink: 0 }}>
             <button
@@ -241,9 +261,7 @@ const LoginPage = () => {
           </div>
         )}
 
-        ---
-
-        {/* About Section (Mission & Vision) */}
+  
         <section id="about" className="container text-white text-center mt-5 mb-5 px-3 animate__animated animate__fadeInUp py-5" style={{ flexShrink: 0 }}>
           <h2 className="fw-bold display-6 mb-5" style={{ color: '#FFD700', textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>About Us</h2>
           <div className="row justify-content-center mb-5">
