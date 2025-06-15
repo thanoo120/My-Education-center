@@ -136,7 +136,7 @@ const ExamManagement = () => {
         </div>
       </div>
 
-      {/* Add Marks */}
+     
       <div className="card shadow-sm mb-4 border-start border-4 border-primary">
         <div className="card-body">
           <h5 className="card-title text-primary mb-3">➕ Add Student Marks</h5>
