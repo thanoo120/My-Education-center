@@ -76,7 +76,6 @@ const TutorDashboard = () => {
         ))}
       </aside>
 
-      {/* Main Content */}
       <main className="flex-fill p-4">{renderSection()}</main>
     </div>
   );

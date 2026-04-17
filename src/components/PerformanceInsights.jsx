@@ -5,10 +5,9 @@ const ExamResults = () => {
   const [error, setError] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    // reserved for future enhancements
   }, []);
 
   const fetchResults = async (e) => {
@@ -55,59 +54,101 @@ const ExamResults = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-100 via-purple-100 to-indigo-100 px-6 py-12">
-      <div className="max-w-4xl mx-auto text-center mb-12">
-        <div className="inline-block p-6 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full text-white text-4xl shadow-lg mb-4 animate-pulse">🎓</div>
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">Academic Excellence Portal</h1>
-        <p className="text-gray-600">Discover your academic achievements and track your progress</p>
+    <div
+      className="p-4 p-md-5 rounded-4"
+      style={{
+        background: 'linear-gradient(135deg, #eef2ff 0%, #f5f3ff 45%, #e0f2fe 100%)',
+        minHeight: '85vh'
+      }}
+    >
+      <div className="container">
+        <div className="text-center mb-5">
+          <div
+            className="d-inline-flex align-items-center justify-content-center rounded-circle shadow-lg mb-3"
+            style={{
+              width: '92px',
+              height: '92px',
+              fontSize: '2.2rem',
+              color: '#fff',
+              background: 'linear-gradient(135deg, #4f46e5, #7c3aed)'
+            }}
+          >
+            🎓
+          </div>
+          <h1 className="fw-bold mb-2" style={{ color: '#1f2937' }}>Academic Excellence Portal</h1>
+          <p className="text-secondary mb-0">Discover your academic achievements and track your progress</p>
+        </div>
+
+        <div className="card border-0 shadow-lg rounded-4 mb-4 overflow-hidden">
+          <div
+            className="px-4 py-3 text-white fw-semibold"
+            style={{ background: 'linear-gradient(90deg, #4338ca, #7c3aed)' }}
+          >
+            Search Results by Student Email
+          </div>
+          <div className="card-body p-4">
+            <form onSubmit={fetchResults}>
+              <div className="row g-3 align-items-center">
+                <div className="col-md-9">
+                  <input
+                    type="email"
+                    placeholder="Enter your student email..."
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="form-control form-control-lg"
+                    disabled={loading}
+                  />
+                </div>
+                <div className="col-md-3 d-grid">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="btn btn-lg text-white fw-semibold"
+                    style={{ background: 'linear-gradient(90deg, #4f46e5, #7c3aed)' }}
+                  >
+                    {loading ? 'Searching...' : 'Get Results'}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
 
-      <form onSubmit={fetchResults} className="max-w-2xl mx-auto mb-10">
-        <div className="flex flex-col sm:flex-row gap-4 items-center bg-white p-6 rounded-xl shadow-md border">
-          <input
-            type="email"
-            placeholder="Enter your student email..."
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full flex-1 py-3 px-5 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-400 outline-none"
-            disabled={loading}
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-purple-600 text-white font-semibold px-6 py-3 rounded-md shadow hover:bg-purple-700 disabled:opacity-60"
-          >
-            {loading ? 'Searching...' : 'Get Results'}
-          </button>
-        </div>
-      </form>
-
       {error && (
-        <div className="max-w-2xl mx-auto bg-red-100 text-red-700 p-4 rounded-md shadow-md text-center mb-6">
+        <div className="container">
+          <div className="alert alert-danger text-center shadow-sm rounded-3 mb-4">
           ❗ {error}
+          </div>
         </div>
       )}
 
       {!loading && results.length > 0 && (
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Your Exam Results</h2>
-          <div className="grid gap-6 sm:grid-cols-2">
+        <div className="container">
+          <h2 className="h3 fw-bold text-center mb-4" style={{ color: '#1f2937' }}>Your Exam Results</h2>
+          <div className="row g-4">
             {results.map((result, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md border hover:shadow-lg transition-transform transform hover:scale-105">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-gray-700">{result.exam_name}</h3>
-                  <span className={`px-3 py-1 rounded-full font-semibold ${getGradeColor(result.marks)}`}>
-                    {getGradeEmoji(result.marks)} {result.marks}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600">📅 {new Date(result.date).toLocaleDateString()}</p>
-                <div className="mt-4 h-3 bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 transition-all duration-1000 ease-out rounded-full"
-                    style={{
-                      width: `${(parseInt(result.marks.split('/')[0]) / 100) * 100}%`,
-                    }}
-                  ></div>
+              <div key={index} className="col-md-6">
+                <div className="card border-0 shadow-sm rounded-4 h-100">
+                  <div className="card-body p-4">
+                    <div className="d-flex align-items-center justify-content-between mb-3">
+                      <h3 className="h5 fw-bold mb-0 text-dark">{result.exam_name}</h3>
+                      <span className={`badge rounded-pill px-3 py-2 ${getGradeColor(result.marks)}`}>
+                        {getGradeEmoji(result.marks)} {result.marks}
+                      </span>
+                    </div>
+                    <p className="text-secondary mb-3">📅 {new Date(result.date).toLocaleDateString()}</p>
+                    <div className="progress" style={{ height: '10px' }}>
+                      <div
+                        className="progress-bar"
+                        role="progressbar"
+                        style={{
+                          width: `${(parseInt(result.marks.split('/')[0]) / 100) * 100}%`,
+                          background: 'linear-gradient(90deg, #4f46e5, #7c3aed)'
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -116,16 +157,16 @@ const ExamResults = () => {
       )}
 
       {!loading && !error && results.length === 0 && email && (
-        <div className="max-w-xl mx-auto text-center bg-white p-10 rounded-xl shadow-md mt-10">
-          <div className="text-4xl mb-4">🔍</div>
-          <h3 className="text-xl font-bold text-gray-700 mb-2">No Results Found</h3>
-          <p className="text-gray-500">We couldn’t find any results for this email. Please check and try again.</p>
+        <div className="container">
+          <div className="card border-0 shadow-sm rounded-4 mx-auto text-center p-4 p-md-5" style={{ maxWidth: '720px' }}>
+            <div style={{ fontSize: '2.2rem' }} className="mb-2">🔍</div>
+            <h3 className="h5 fw-bold mb-2 text-dark">No Results Found</h3>
+            <p className="text-secondary mb-0">We could not find any results for this email. Please check and try again.</p>
+          </div>
         </div>
       )}
 
-      <footer className="mt-16 text-center text-gray-500 text-sm">
-        &copy; {new Date().getFullYear()} Academic Excellence Portal — Empowering students through transparent tracking
-      </footer>
+      
     </div>
   );
 };

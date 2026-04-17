@@ -7,7 +7,7 @@ const StudentList = () => {
   const [loading, setLoading] = useState(true);
   const [editingStudent, setEditingStudent] = useState(null);
 
-  // Fetch all students
+
   const fetchStudents = async () => {
     try {
       setLoading(true);
@@ -25,7 +25,7 @@ const StudentList = () => {
     fetchStudents();
   }, []);
 
-  // Delete student
+  
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this student?")) return;
     try {
@@ -36,7 +36,7 @@ const StudentList = () => {
     }
   };
 
-  // Start editing
+  
   const handleEditClick = (student) => {
     setEditingStudent({ ...student });
   };

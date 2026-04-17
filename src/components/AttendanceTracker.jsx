@@ -2,6 +2,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const FALLBACK_ATTENDANCE_IMAGE =
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200"><rect width="100%" height="100%" fill="%23f8f9fa"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%236c757d" font-family="Arial" font-size="18">Attendance Tracking</text></svg>';
+
 const AttendanceStatus = () => {
   const [email, setEmail] = useState("");
   const [summary, setSummary] = useState(null);
@@ -45,29 +48,38 @@ const AttendanceStatus = () => {
     setLoading(true);
 
     try {
+      await new Promise(resolve => setTimeout(resolve, 1200));
 
-      await new Promise(resolve => setTimeout(resolve, 1200)); 
-
-      
       const response = await axios.get(
         "http://localhost:5000/api/attendance/summary",
         { params: { email } }
       );
-      setSummary(response.data);
-   
 
-     
+      const apiData = response?.data;
+      const hasApiData =
+        apiData &&
+        apiData.totalClasses !== undefined &&
+        apiData.attended !== undefined &&
+        apiData.percentage !== undefined;
+
+      if (hasApiData) {
+        setSummary(apiData);
+        return;
+      }
+
       if (mockAttendanceData[email]) {
         setSummary(mockAttendanceData[email]);
       } else {
-       
         setError("Attendance data not found for this email. Try 'student1@example.com' or 'student2@example.com'.");
       }
 
     } catch (err) {
       console.error("Attendance fetch error:", err);
-      // More specific error message based on API response
-      setError(err.response?.data?.message || "Failed to fetch attendance summary. Please check the email and try again.");
+      if (mockAttendanceData[email]) {
+        setSummary(mockAttendanceData[email]);
+      } else {
+        setError(err.response?.data?.message || "Failed to fetch attendance summary. Please check the email and try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -117,10 +129,9 @@ const AttendanceStatus = () => {
           If not using a local image, you can use a placeholder or remove this.
         */}
         <img
-          src="../assests/attendence.jpg" // Adjust this path if your image is elsewhere
+          src={FALLBACK_ATTENDANCE_IMAGE}
           alt="Student checking attendance illustration"
           className="img-fluid rounded mb-5 shadow-sm mx-auto d-block custom-image-sizing"
-          onError={(e) => { e.target.onerror = null; e.target.src="https://via.placeholder.com/400x200?text=Attendance+Tracking"; }}
         />
 
 

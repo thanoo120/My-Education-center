@@ -7,8 +7,9 @@ const RegisterPage = () => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: '', // Added for client-side validation
-    role: 'student'
+    confirmPassword: '',
+    role: 'student',
+    student_id: '' // optional: link parent to a student (used when role is parent)
   });
   const [error, setError] = useState(''); // State to display validation or API errors
 
@@ -17,26 +18,35 @@ const RegisterPage = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Client-side validation: password match and strength
+  const passwordMismatch = form.password && form.confirmPassword && form.password !== form.confirmPassword;
+  const passwordTooShort = form.password && form.password.length > 0 && form.password.length < 6;
+
   // Handles the registration submission
   const handleRegister = async (e) => {
-    e.preventDefault(); // Prevent default browser form submission
-    setError(''); // Clear any previous errors
+    e.preventDefault();
+    setError('');
 
-    // Client-side validation: Check if passwords match
-    if (form.password !== form.confirmPassword) {
+    if (passwordMismatch) {
       setError('Passwords do not match. Please ensure both fields are identical.');
-      return; // Stop the registration process if passwords don't match
+      return;
+    }
+    if (passwordTooShort) {
+      setError('Password must be at least 6 characters.');
+      return;
     }
 
     try {
-      // Destructure form to exclude confirmPassword when sending data to the API
-      const { confirmPassword, ...dataToRegister } = form;
-      await API.post('/auth/register', dataToRegister);
-      alert('Registration successful! You can now login.');
+      const payload = { ...form };
+      if (payload.student_id === '') delete payload.student_id;
+      const res = await API.post('/auth/register', payload);
+      const roleId = res.data?.roleId;
+      const idMessage = roleId ? ` Your ID: ${roleId}` : '';
+      alert(`Registration successful!${idMessage} You can now login.`);
       window.location.href = '/'; // Redirect to home/login page
     } catch (err) {
       // Display specific error from the backend or a general message
-      setError('Registration failed: ' + (err.response?.data?.error || err.message));
+      setError('Registration failed: ' + (err.response?.data?.message || err.response?.data?.error || err.message));
     }
   };
 
@@ -96,35 +106,42 @@ const RegisterPage = () => {
             name="password"
             id="passwordInput"
             type="password"
-            placeholder="Password"
+            placeholder="Password (min 6 characters)"
             onChange={handleChange}
             required
-            className="form-control form-control-lg"
+            minLength={6}
+            className={`form-control form-control-lg ${passwordTooShort ? 'is-invalid' : ''}`}
           />
+          {passwordTooShort && (
+            <div className="invalid-feedback">Password must be at least 6 characters.</div>
+          )}
         </div>
 
         <div className="mb-4">
           <label htmlFor="confirmPasswordInput" className="form-label visually-hidden">Confirm Password</label>
           <input
-            name="confirmPassword" // Corrected name for consistency with state
+            name="confirmPassword"
             id="confirmPasswordInput"
             type="password"
             placeholder="Confirm Password"
             onChange={handleChange}
             required
-            className="form-control form-control-lg"
+            className={`form-control form-control-lg ${passwordMismatch ? 'is-invalid' : ''}`}
           />
+          {passwordMismatch && (
+            <div className="invalid-feedback">Passwords do not match.</div>
+          )}
         </div>
 
-        <div className="mb-5"> {/* Increased margin-bottom for better separation */}
+        <div className="mb-4">
           <label htmlFor="roleSelect" className="form-label visually-hidden">Your Role</label>
           <select
             name="role"
             id="roleSelect"
             onChange={handleChange}
             required
-            className="form-select form-select-lg" // Larger select field
-            defaultValue="student" // Set default value for the dropdown
+            className="form-select form-select-lg"
+            defaultValue="student"
           >
             <option value="student">Student</option>
             <option value="tutor">Tutor</option>
@@ -132,6 +149,23 @@ const RegisterPage = () => {
             <option value="parent">Parent</option>
           </select>
         </div>
+
+        {form.role === 'parent' && (
+          <div className="mb-5">
+            <label htmlFor="studentIdInput" className="form-label">Student ID (optional)</label>
+            <input
+              name="student_id"
+              id="studentIdInput"
+              type="number"
+              min="1"
+              placeholder="Link to your student's ID"
+              onChange={handleChange}
+              value={form.student_id}
+              className="form-control form-control-lg"
+            />
+          </div>
+        )}
+        {form.role !== 'parent' && <div className="mb-5" />}
 
         <button
           type="submit"

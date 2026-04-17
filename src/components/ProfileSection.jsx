@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+const FALLBACK_PROFILE_IMAGE =
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="100%" height="100%" fill="%23f8f9fa"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%236c757d" font-family="Arial" font-size="16">Upload</text></svg>';
+
 const StudentProfilePage = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [name, setName] = useState('John Doe');
@@ -102,7 +105,7 @@ const StudentProfilePage = () => {
         <div className="card-body p-4 p-md-5">
           <div className="text-center mb-4">
             <img
-              src={profileImage || 'https://via.placeholder.com/200/f8f9fa/dee2e6?text=Upload'}
+              src={profileImage || FALLBACK_PROFILE_IMAGE}
               alt="Profile"
               className="img-thumbnail rounded-circle mb-3 border-0 shadow-sm"
               style={{ width: '200px', height: '200px', objectFit: 'cover' }}

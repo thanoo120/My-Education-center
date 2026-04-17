@@ -179,7 +179,7 @@ const LoginPage = () => {
 
        
         <section id="home" className="text-center text-white px-3 animate__animated animate__fadeInDown mt-5 mb-4 py-5" style={{ maxWidth: '800px', flexShrink: 0 }}>
-          <h2 className="fw-bold display-5 mb-2" style={{ letterSpacing: '1px', textShadow: '2px 2px 4px rgba(0,0,0,0.7)' ,paddingTop:'100px'}}>
+          <h2 className="fw-bold display-5 mb-2" style={{ letterSpacing: '1px', textShadow: '2px 2px 4px rgba(145, 120, 120, 0.7)' ,paddingTop:'100px'}}>
             Welcome to <span style={{ color: '#FFD700' }}>Esay Learn Institute</span>
           </h2>
           <p className="fst-italic lead" style={{ maxWidth: '650px', margin: '0 auto', fontSize: '1.2rem', textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>

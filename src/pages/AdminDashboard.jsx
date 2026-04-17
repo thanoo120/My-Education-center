@@ -13,6 +13,7 @@ import AttendanceOverview from '../components/AttendanceOverview';
 import ExamManagement from '../components/ExamManagement';
 import LogoutButton from '../components/LogoutButton';
 import SummaryCard from '../components/SummaryCard'
+import ContentManager from '../components/ContentManager';
 const AdminDashboard = () => {
   const [section, setSection] = useState('dashboard');
   const [summary ,setSummary]=useState({ students: 0, tutors: 0, payments: 0 });
@@ -29,6 +30,7 @@ const AdminDashboard = () => {
       case 'payments': return <PaymentRecords />;
       case 'attendance': return <AttendanceOverview />;
       case 'exams': return <ExamManagement />;
+      case 'content': return <ContentManager />;
       case 'logout': return <LogoutButton />;
       default:
         return (
@@ -72,6 +74,7 @@ const AdminDashboard = () => {
     { label: 'Payments', icon: <FaMoneyCheckAlt />, key: 'payments' },
     { label: 'Attendance', icon: <FaCalendarCheck />, key: 'attendance' },
     { label: 'Exams', icon: <FaFileAlt />, key: 'exams' },
+    { label: 'Study Materials & Entrance', icon: <FaFileAlt />, key: 'content' },
     { label: 'Logout', icon: <FaSignOutAlt />, key: 'logout' },
   ];
 

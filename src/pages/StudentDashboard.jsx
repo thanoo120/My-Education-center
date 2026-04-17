@@ -18,6 +18,7 @@ import Subjects from "../components/SubjectCart";
 import TeacherImage from "../assests/teacher.jpg";
 import ClassLogo from "../assests/Classlogo.jpg";
 import Profile from "../components/ProfileSection";
+import StudentResources from "../components/StudentResources";
 
 const StudentDashboard = () => {
   const [section, setSection] = useState("dashboard");
@@ -61,6 +62,8 @@ const StudentDashboard = () => {
         return <Profile />;
       case "subjects":
         return <Subjects />;
+      case "resources":
+        return <StudentResources />;
       case "logout":
         return <LogoutButton />;
       default:
@@ -156,6 +159,7 @@ const StudentDashboard = () => {
     { label: "My Attendance", icon: <FaCalendarCheck />, key: "attendance" },
     { label: "My Payments", icon: <FaMoneyCheckAlt />, key: "payments" },
     { label: "Exam Results", icon: <FaChartBar />, key: "results" },
+    { label: "Resources", icon: <FaBook />, key: "resources" },
     { label: "Profile", icon: <FaSignOutAlt />, key: "profile" },
   ];
 
